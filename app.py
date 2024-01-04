@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template, jsonify, redirect, url_for
+from flask import Flask,request,render_template, jsonify, redirect, url_for,flash
 import os
 from models import db
 from werkzeug.security import generate_password_hash
@@ -88,13 +88,15 @@ def allowed_file(filename):
 @app.route('/upload', methods=['POST'])
 def upload():
     file = request.files['file']
-    # print(file.filename)
+    print(file)
 
     if file and allowed_file(file.filename):
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'],file.filename))
-
-        
-    return str(file)
+       file_path= os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+       file.save(file_path)
+       print(file_path)
+       db.Fileupload.insert_one({'filename':file.filename,'furl':file_path})
+         
+    return jsonify({'message':'File uploaded successfully'}),201
 
 
 if __name__ == '__main__':
