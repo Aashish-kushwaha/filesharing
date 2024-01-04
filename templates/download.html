@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure File Sharing</title>
+    <style>
+        table, th, td,tr {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+table {
+  border: 10px solid red;
+  border-collapse: collapse;
+}
+    </style>
+</head>
+<body>
+    <h1>Secure File Sharing</h1>
+
+    
+    <h2>Download File (Client User)</h2>
+    
+    <table>
+        <tr>
+            <th colspan="2">
+                filenames
+            </th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{row._id}}</td>
+            <td>{{row.filename}}</td>
+            <td>{{row.furl}}</td>
+            <td>
+                <a href="/download_file/{{row._id}}"><button>download</button></a>
+            
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+
+   
+</body>
+</html>

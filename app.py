@@ -1,13 +1,13 @@
-from flask import Flask,request,render_template, jsonify, redirect, url_for,flash
+from flask import Flask,request,render_template, jsonify, redirect, url_for,send_file
 import os
 from models import db
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
+from bson import ObjectId
 app=Flask(__name__)
 ALLOWED_EXTENSIONS = {'pptx', 'docx', 'xlsx'}
 
-app.config['UPLOAD_FOLDER']='uploads'
-
+app.config['UPLOAD_FOLDER']='D:/secure_filetransfer/uploads/'
 
 #========Login function==============================
 @app.route('/login',methods=['GET','POST'])
@@ -81,7 +81,32 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+@app.route('/download')
+def download():
+    rows = list(db.Fileupload.find())
+    # filenames = [row['filename'] for row in rows]
+    # ids = [str(row['_id']) for row in rows]
+    return render_template('download.html',rows=rows)
+   
 
+@app.route('/download_file/<_id>',methods=['GET', 'POST'])
+def download_file(_id):
+     obj_id=ObjectId(_id)
+     print("id recieved:",_id)
+     print(type(obj_id))
+     file_info = db.Fileupload.find_one({'_id':obj_id})
+     print("file_info:", file_info)
+     if file_info:
+        return send_file(file_info['furl'], as_attachment=True)
+     else:
+        return 'File not found'
+    
+    # rows = list(db.Fileupload.find())
+    # print(rows)
+    # fileurl = [row['furl'] for row in rows]
+    # print(fileurl)
+    # ifs3
+    # return send_file(fileurl,as_attachment=True)
 
 
 
