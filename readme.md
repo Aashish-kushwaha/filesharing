@@ -45,8 +45,8 @@ Open Postman and import the provided Postman dumps(filesharing.postman_collectio
 
 1. **User Login:**
 Make a POST request to ```bash/login``` with the following parameters:.
-'username': Your username
-'password': Your password
+'username': Your username\
+'password': Your password 
 2. **File Upload:**
 
 Make a POST request to ```/upload``` with the following parameters:
