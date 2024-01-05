@@ -1,66 +1,75 @@
-from flask import Flask,request,render_template, jsonify, redirect, url_for,send_file
+from flask import Flask,request,render_template, jsonify, redirect, url_for,send_file, session
 import os
 from models import db
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from bson import ObjectId
+
+
 app=Flask(__name__)
+app.secret_key='Aashish'
 ALLOWED_EXTENSIONS = {'pptx', 'docx', 'xlsx'}
 
 app.config['UPLOAD_FOLDER']='uploads'
 
 
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/upload_file')
-def upload_file():
-    return render_template('upload.html')
-
-@app.route('/download')
-def download():
-    rows = list(db.Fileupload.find())
-    print("sdfghjkk")
-    return render_template('download.html',rows=rows)
-
 #   user login function
-@app.route('/login',methods=['GET','POST'])
+@app.route('/login',methods=['POST'])
 def user_login():
     username=request.form.get('username')
     password=request.form.get('password')
-    print(username)
-    print(password)
+    
     user=db.LoginUser.find_one(({'username':username, 'password':password}))
   
     if user:
-        return redirect(url_for('upload_file'))
+        session['logged_in'] = True
+        session['username'] = username
+        return redirect(url_for('upload'))
     else:
-        return render_template('index.html')  
+        return jsonify({'error': 'Login Failed'})
     
+
+#    upload function 
+     
+@app.route('/upload', methods=['GET','POST'])
+def upload():
+
+    if not session.get('logged_in'):
+        return jsonify({'error': 'unwuthorized'}), 401
+    
+    if request.method == 'POST':
+        file = request.files['file']
+
+        if file and allowed_file(file.filename):
+            file_path= os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+            file.save(file_path)
+            db.Fileupload.insert_one({'filename':file.filename.replace(" ", "_"),'furl':file_path})
+            return jsonify({'message':'File uploaded successfully'}), 201
+        else:
+            return jsonify({'error':'File upload failed'}), 400
+
+    return "Welocome to the upload page"
+
+
+
 
 #   client login function
 @app.route('/client-login',methods=['POST'])
 def client_login():
     clientname=request.form.get('clientname')
     cpassword=request.form.get('password')
-    
-    print(clientname)
-    print(cpassword)
-
-    print(db.LoginUser)
 
     user= db.Client.find_one({'clientname':clientname})
-    print(user)
-    print(user['cpassword'])
+ 
+    file_info_cursor = db.Fileupload.find({})
+    f_names= [file_info['filename'] for file_info in file_info_cursor]
   
     if user and check_password_hash(user['cpassword'],cpassword):
-        print("aa gya")
-        return redirect(url_for('download'))
+        file_urls = [{'download-link': request.url_root.rstrip('/') + '/download_file/' + f_name.replace(" ", '_')} for f_name in f_names]
+        return jsonify({'success': 'success', 'file_urls': file_urls})
     else:
-        return render_template('index.html')  
+        return jsonify({'error': 'client Login failed'}) 
 
 
 #     Client register function
@@ -83,36 +92,21 @@ def client_register():
 
  
  #     download function
-@app.route('/download_file/<_id>',methods=['GET', 'POST'])
-def download_file(_id):
-     obj_id=ObjectId(_id)
-     print("id recieved:",_id)
-     print(type(obj_id))
-     file_info = db.Fileupload.find_one({'_id':obj_id})
-     print("file_info:", file_info)
-     if file_info:
+@app.route('/download_file/<filename>',methods=['GET', 'POST'])
+def download_file(filename):
+    obj_filename=filename
+    
+    file_info = db.Fileupload.find_one({'filename':obj_filename})
+  
+    if file_info:
         return send_file(file_info['furl'], as_attachment=True)
-     else:
-        return 'File not found'
+    else:
+        return jsonify({'error':'File not found'})
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#    upload function 
-     
-@app.route('/upload', methods=['POST'])
-def upload():
-    file = request.files['file']
-    print(file)
-
-    if file and allowed_file(file.filename):
-       file_path= os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
-       file.save(file_path)
-       print(file_path)
-       db.Fileupload.insert_one({'filename':file.filename,'furl':file_path})
-         
-    return jsonify({'message':'File uploaded successfully'}),201
 
 
 if __name__ == '__main__':
