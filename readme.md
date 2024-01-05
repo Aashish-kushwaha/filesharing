@@ -41,13 +41,13 @@ Follow the steps to setup
     ```
 
 ## Usage with Postman
-Open Postman and import the provided Postman dump (filesharing.postman_collection.json).
+Open Postman and import the provided Postman dumps(filesharing.postman_collection.json).
 
-1. **User Login**:
-Make a POST request to ```bash/login``` with the following parameters:
+1. **User Login:**
+Make a POST request to ```bash/login``` with the following parameters:.
 'username': Your username
 'password': Your password
-2. **File Upload**:
+2. **File Upload:**
 
 Make a POST request to ```/upload``` with the following parameters:
 file: Choose a file to upload
