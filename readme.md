@@ -23,7 +23,7 @@ Follow the steps to setup
     ```
 3. **Activate the Virtual Environment**
     ```bash
-    venv\Scripts\activate
+    .\venv\Scripts\activate
     ```
     On Unix or MacOS:
 
@@ -47,7 +47,7 @@ Open Postman and import the provided Postman dumps(filesharing.postman_collectio
 Make a POST request to ```/login``` with the following parameters:\
 'username': Your username\
 'password': Your password \
-check the postman dumb for existing user details and login using those details.\
+check the body of ```\login``` for existing user details and login using those details.\
 2. **File Upload:**\
 Make a POST request to ```/upload``` with the following parameters:\
 file: Choose a file to upload\
@@ -60,7 +60,10 @@ clientname: Client name\
 Make a POST request to /client-login with the following parameters:\
 clientname: Your client name\
 password: Your client password\
-If successful, you will receive a success message along with links to download the uploaded files.
+If successful, you will receive a success message along with links to download the uploaded files.\
+use this link to download the files.\
 
-    
+
+## How do you plan on deploying this to the production environment\
+To put my Flask app on the internet, I choose a reliable cloud service, set up a strong web server, and use a tool like Gunicorn to run my app smoothly. I keep things secure by managing secrets like passwords properly and keeping an eye on any issues with logging. I think about handling more users by scaling up or out as needed. Automation tools help with testing and updating my app, making it easier to manage. I use monitoring tools to catch and fix problems, have a backup plan just in case, and write clear instructions so everyone knows how things work. This way, my Flask app runs smoothly and securely for users.
  
