@@ -63,7 +63,9 @@ password: Your client password\
 If successful, you will receive a success message along with links to download the uploaded files.\
 use this link to download the files.\
 
+## Important Notes
+The application uses MongoDB Atlas, and the database is open to all IPs.
 
-## How do you plan on deploying this to the production environment\
+## How do you plan on deploying this to the production environment
 To put my Flask app on the internet, I choose a reliable cloud service, set up a strong web server, and use a tool like Gunicorn to run my app smoothly. I keep things secure by managing secrets like passwords properly and keeping an eye on any issues with logging. I think about handling more users by scaling up or out as needed. Automation tools help with testing and updating my app, making it easier to manage. I use monitoring tools to catch and fix problems, have a backup plan just in case, and write clear instructions so everyone knows how things work. This way, my Flask app runs smoothly and securely for users.
  
