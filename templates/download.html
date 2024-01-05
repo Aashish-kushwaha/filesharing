@@ -29,9 +29,9 @@ table {
         </tr>
         {% for row in rows %}
         <tr>
-            <td>{{row._id}}</td>
+           
             <td>{{row.filename}}</td>
-            <td>{{row.furl}}</td>
+            
             <td>
                 <a href="/download_file/{{row._id}}"><button>download</button></a>
             
@@ -40,7 +40,5 @@ table {
         {% endfor %}
     </table>
     
-
-   
 </body>
 </html>

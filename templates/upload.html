@@ -11,12 +11,10 @@
     <h2>Upload File (Ops User)</h2>
     <form id="uploadForm">
         <input type="file" name="file" accept=".pptx, .docx, .xlsx" required>
-        <input type="hidden" name="user_id" value="1"> <!-- Replace with the actual user_id -->
+        <input type="hidden" name="user_id" value="1"> 
         <button type="submit">Upload File</button>
     </form>
     <div id="uploadMessage" style="display: none;"></div>
-    <!-- <h2>Download File (Client User)</h2>
-    <button id="downloadButton">Download File</button> -->
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
@@ -42,17 +40,6 @@
 
 
 
-        // document.getElementById('downloadButton').addEventListener('click', function () {
-        //     fetch('/download-file/1') // Replace with the actual file ID
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         alert(data.message);
-        //         window.location.href = data['download-link'];
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //     });
-        // });
     </script>
 </body>
 </html>
